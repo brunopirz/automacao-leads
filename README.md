@@ -77,8 +77,8 @@ O Traefik vai expor sua API no domínio api.seudominio.com com HTTPS automático
 
 ## 📌 Observações importantes:
 
-## Substitua seu-email@dominio.com pelo email que quer usar no Let's Encrypt.
+#### Substitua seu-email@dominio.com pelo email que quer usar no Let's Encrypt.
 
-## Substitua api.seudominio.com pelo domínio real.
+#### Substitua api.seudominio.com pelo domínio real.
 
 Certifique-se de que o DNS do domínio aponta para o IP da VPS onde o Portainer está rodando.
