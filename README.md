@@ -47,30 +47,23 @@ Projeto esqueleto para receber, processar e qualificar leads via API, com integr
 
 Desenvolvido para ser facilmente adaptado e estendido.
 
-Como rodar no Portainer
+# Como rodar no Portainer
 Entre no Portainer → Stacks → Add Stack.
 
 Nome da Stack: automacao-leads.
 
 Selecione a opção "Repository".
 
-Repository URL:
+## Repository URL:
 
-arduino
-Copiar
-Editar
 https://github.com/brunopirz/automacao-leads
-Repository reference:
 
-css
-Copiar
-Editar
+## Repository reference:
 main
-Compose path:
 
-Copiar
-Editar
+Compose path:
 docker-compose.yml
+
 Deploy the Stack.
 
 O que vai acontecer
@@ -82,10 +75,10 @@ Subirá o PostgreSQL e o Traefik juntos.
 
 O Traefik vai expor sua API no domínio api.seudominio.com com HTTPS automático (precisa apontar DNS para a VPS).
 
-📌 Observações importantes:
+## 📌 Observações importantes:
 
-Substitua seu-email@dominio.com pelo email que quer usar no Let's Encrypt.
+## Substitua seu-email@dominio.com pelo email que quer usar no Let's Encrypt.
 
-Substitua api.seudominio.com pelo domínio real.
+## Substitua api.seudominio.com pelo domínio real.
 
 Certifique-se de que o DNS do domínio aponta para o IP da VPS onde o Portainer está rodando.
