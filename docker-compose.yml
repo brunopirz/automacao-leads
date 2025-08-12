@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"
+      - "8080:8080"  # Traefik dashboard (insecure) - remove in production
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: automacao_leads
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/automacao_leads
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.automacao.rule=Host(`localhost`)"
+      - "traefik.http.services.automacao.loadbalancer.server.port=8000"
+    ports:
+      - "8000:8000"
+
+volumes:
+  db_data:
