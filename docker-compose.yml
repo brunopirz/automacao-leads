@@ -1,40 +1,52 @@
 version: "3.8"
+
 services:
   traefik:
     image: traefik:v2.10
+    container_name: traefik
     command:
       - --api.insecure=true
       - --providers.docker=true
       - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.httpchallenge=true
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+      - --certificatesresolvers.myresolver.acme.email=seu-email@dominio.com
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
     ports:
       - "80:80"
-      - "8080:8080"  # Traefik dashboard (insecure) - remove in production
+      - "443:443"
+      - "8080:8080" # Painel do Traefik (não deixe ativo em produção)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_data:/letsencrypt
+    restart: unless-stopped
 
   db:
     image: postgres:15
+    container_name: automacao_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: automacao_leads
     volumes:
       - db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    restart: unless-stopped
 
   app:
     build: .
+    container_name: automacao_app
     depends_on:
       - db
     environment:
       - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/automacao_leads
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.automacao.rule=Host(`localhost`)"
-      - "traefik.http.services.automacao.loadbalancer.server.port=8000"
-    ports:
-      - "8000:8000"
+      - "traefik.http.routers.automacao.rule=Host(`api.seudominio.com`)"
+      - "traefik.http.routers.automacao.entrypoints=websecure"
+      - "traefik.http.routers.automacao.tls.certresolver=myresolver"
+    restart: unless-stopped
 
 volumes:
   db_data:
+  traefik_data:
